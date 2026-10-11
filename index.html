@@ -214,6 +214,13 @@
           <p class="key-result"><span class="en">Searched 926 players for Kevin De Bruyne's successor. The player Man City signed ranked 4th.</span><span class="ko">926명 중 케빈 더브라위너의 후계자를 찾는 모델. 맨시티가 실제 영입한 선수가 4위.</span></p>
           <ul class="tags"><li>Python</li><li>Jupyter</li><li>PCA</li><li><span class="en">Robustness checks</span><span class="ko">강건성 검사</span></li></ul>
         </a>
+        <a class="project" href="#projects" data-project="ml">
+          <div class="cover cover-ml" aria-hidden="true"><span>Recall under constraints</span><small>EfficientNetB0 · 6,726 scans</small></div>
+          <div class="project-meta mono"><span><span class="en">UTS coursework · Machine Learning</span><span class="ko">UTS 과제 · 머신러닝</span></span><span><span class="en">2025</span><span class="ko">2025</span></span></div>
+          <h3><span class="en">High-recall screening with a tuned decision threshold</span><span class="ko">결정 임계값 조정으로 만든 고재현율 스크리닝 모델</span></h3>
+          <p class="key-result"><span class="en">Brain tumour MRI classifier. Caught 900 of 903 tumours on the held-out test set (recall 0.997) while keeping precision at 0.949.</span><span class="ko">뇌종양 MRI 분류 모델. 별도 테스트셋의 종양 903건 중 900건을 찾아냈고(재현율 0.997), 정밀도는 0.949를 유지했습니다.</span></p>
+          <ul class="tags"><li>TensorFlow</li><li>Transfer learning</li><li><span class="en">Threshold tuning</span><span class="ko">임계값 조정</span></li><li>Bootstrap CI</li></ul>
+        </a>
       </div>
     </section>
 
@@ -403,6 +410,29 @@
       <div class="writeup-actions">
         <a class="btn primary" href="https://github.com/HJunJeon/debruyne-successor-similarity" target="_blank" rel="noopener"><span class="en">View code on GitHub</span><span class="ko">GitHub에서 코드 보기</span></a>
       </div>
+    </div>
+  </template>
+
+  <template id="tpl-ml">
+    <div class="writeup">
+      <p class="cert-org mono"><span class="en">UTS 31005 Machine Learning · Assignment 2 · 2025</span><span class="ko">UTS 31005 머신러닝 · 과제 2 · 2025</span></p>
+      <img class="writeup-img" src="assets/ml-test-evaluation.png" alt="Test set confusion matrix, ROC curve and precision-recall curve" loading="lazy">
+      <dl>
+        <dt><span class="en">Question</span><span class="ko">질문</span></dt>
+        <dd><span class="en">Can a model flag brain tumours in MRI scans so that almost none are missed, without flagging so many normal scans that it stops saving radiologists time?</span><span class="ko">MRI 영상에서 뇌종양을 거의 놓치지 않으면서도, 정상 영상을 너무 많이 걸러내 판독의 시간을 오히려 늘리지 않는 모델을 만들 수 있을까?</span></dd>
+        <dt><span class="en">Data</span><span class="ko">데이터</span></dt>
+        <dd><span class="en">Brain Tumor MRI Dataset (Kaggle), 7,023 images. Hashing found 194 groups of identical files, 79 of them crossing the official train and test folders. Removing them left 6,726 images and stopped test images leaking into training.</span><span class="ko">Kaggle Brain Tumor MRI Dataset 7,023장. 해시로 동일한 파일 194묶음을 찾았고, 그중 79묶음은 공식 학습·테스트 폴더에 동시에 있었습니다. 이를 제거해 6,726장을 남기고 테스트 데이터가 학습에 새어 들어가는 것을 막았습니다.</span></dd>
+        <dt><span class="en">Method</span><span class="ko">방법</span></dt>
+        <dd><span class="en">Fine-tuned an ImageNet EfficientNetB0 in two stages with class weights and augmentation. Training minimises cross-entropy, so the decision threshold was chosen afterwards on validation data: maximise recall subject to precision ≥ 0.9 and specificity ≥ 0.8. Without the specificity floor the rule collapses to flagging every scan.</span><span class="ko">ImageNet으로 학습된 EfficientNetB0를 클래스 가중치와 데이터 증강을 적용해 두 단계로 미세 조정했습니다. 학습은 교차 엔트로피를 최소화하므로, 결정 임계값은 학습 후 검증 데이터에서 따로 정했습니다. 정밀도 0.9 이상, 특이도 0.8 이상을 지키면서 재현율을 최대화하는 기준입니다. 특이도 하한이 없으면 모든 영상을 종양으로 판정하는 쪽으로 무너집니다.</span></dd>
+        <dt><span class="en">Validation</span><span class="ko">검증</span></dt>
+        <dd><span class="en">The test set was used once, at the end. 95% confidence intervals came from 1,000 bootstrap resamples, calibration was checked with a reliability diagram, and Grad-CAM confirmed the model looks at the lesion rather than the skull or background.</span><span class="ko">테스트셋은 마지막에 한 번만 사용했습니다. 95% 신뢰구간은 부트스트랩 1,000회로 구했고, 신뢰도 곡선으로 보정 상태를 확인했으며, Grad-CAM으로 모델이 두개골이나 배경이 아닌 병변을 보고 있는지 확인했습니다.</span></dd>
+        <dt><span class="en">Findings</span><span class="ko">결과</span></dt>
+        <dd><span class="en">Recall 0.997 (95% CI 0.992 to 1.000), precision 0.949, specificity 0.874, AUC-ROC 0.998. Compared with the default 0.5 threshold, this missed 18 fewer tumours at the cost of 35 more false alarms. All 3 misses were small meningiomas scored with high confidence, so no threshold change would have caught them.</span><span class="ko">재현율 0.997(95% 신뢰구간 0.992~1.000), 정밀도 0.949, 특이도 0.874, AUC-ROC 0.998. 기본 임계값 0.5와 비교해 놓친 종양은 18건 줄었고, 오탐은 35건 늘었습니다. 놓친 3건은 모두 작은 수막종이었고 모델이 확신을 갖고 정상으로 판정해, 임계값을 바꿔도 잡을 수 없는 경우였습니다.</span></dd>
+        <dt><span class="en">In finance</span><span class="ko">금융에서는</span></dt>
+        <dd><span class="en">Fraud and AML alert tuning is the same trade-off: catch as many true cases as possible while keeping false alerts at a level the investigation team can handle.</span><span class="ko">사기 탐지와 AML 알림 기준 설정도 같은 문제입니다. 실제 사례는 최대한 잡아내면서, 오탐은 조사팀이 감당할 수 있는 수준으로 유지해야 합니다.</span></dd>
+        <dt><span class="en">Tools</span><span class="ko">도구</span></dt>
+        <dd>Python, TensorFlow/Keras, scikit-learn, NumPy, Matplotlib, Grad-CAM</dd>
+      </dl>
     </div>
   </template>
 

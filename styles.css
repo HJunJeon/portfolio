@@ -234,3 +234,4 @@ a.cert:hover { border-color: var(--accent); }
 button.btn { cursor: pointer; font-family: inherit; color: inherit; }
 .writeup-actions { display: flex; flex-wrap: wrap; gap: 10px; }
 .writeup-img { display: block; width: 100%; height: auto; border: 1px solid var(--line); border-radius: 10px; background: #fff; margin-top: 14px; }
+.cover-ml { background: linear-gradient(135deg, #1f3b3a, #2f6b66); color: #fff; border: 0; }
